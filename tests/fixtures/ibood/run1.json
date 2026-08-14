@@ -1,0 +1,49 @@
+{
+  "deals": [
+    {
+      "id": "12345",
+      "title": "Apple AirPods Pro (2. generacji)",
+      "subtitle": "Refurbished, klasa A",
+      "price": "399.00",
+      "was_price": "899.00",
+      "currency": "PLN",
+      "url": "https://www.ibood.com/pl/deal/12345",
+      "image": "https://img.ibood.com/12345.jpg",
+      "stock": "available",
+      "ean": "0194252057626",
+      "starts_at": "2026-08-10T08:00:00Z",
+      "ends_at": "2026-08-11T08:00:00Z",
+      "category": "Audio"
+    },
+    {
+      "id": "12346",
+      "title": "Xiaomi Robot Vacuum S10",
+      "subtitle": null,
+      "price": "899.00",
+      "was_price": "1499.00",
+      "currency": "PLN",
+      "url": "https://www.ibood.com/pl/deal/12346",
+      "image": "https://img.ibood.com/12346.jpg",
+      "stock": "available",
+      "ean": null,
+      "starts_at": "2026-08-10T08:00:00Z",
+      "ends_at": "2026-08-11T08:00:00Z",
+      "category": "Dom"
+    },
+    {
+      "id": "12347",
+      "title": "Zestaw noży kuchennych 6 szt.",
+      "subtitle": "Stal nierdzewna",
+      "price": "129.00",
+      "was_price": null,
+      "currency": "PLN",
+      "url": "https://www.ibood.com/pl/deal/12347",
+      "image": "https://img.ibood.com/12347.jpg",
+      "stock": "sold_out",
+      "ean": "5901234567890",
+      "starts_at": "2026-08-10T08:00:00Z",
+      "ends_at": "2026-08-11T08:00:00Z",
+      "category": "Dom"
+    }
+  ]
+}

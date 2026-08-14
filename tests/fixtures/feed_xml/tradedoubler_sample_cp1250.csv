@@ -1,0 +1,5 @@
+sku;gtin;nazwa;cena;dostepnosc;marka;url
+TD-1001;5901234567890;Ekspres do kawy DeLonghi Magnifica S;899,00;dostepny;DeLonghi;https://sklep.pl/p/1001
+TD-1002;;Czajnik elektryczny ¯elazny 1.7L;79,99;niedostepny;¯elazny;https://sklep.pl/p/1002
+TD-1003;5901234567891;G³oœnik Bluetooth JBL Flip 6;349,00;dostepny;JBL;https://sklep.pl/p/1003
+TD-1004;5901234567892;Suszarka do w³osów Philips 2200W;129,50;dostepny;Philips;https://sklep.pl/p/1004

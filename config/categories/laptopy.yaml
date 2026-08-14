@@ -1,0 +1,20 @@
+# Utility formula for elektronika/laptopy (owner: A5).
+#
+# `ram_gb` and `capacity_gb` (storage) come from the same "8/256GB" RAM/storage shorthand regex in A2's
+# extractor (normalize/attrs.py `_extract_capacity`) -- when a title states one in that shorthand it almost
+# always states the other, so requiring both together does not create an artificial gap between them.
+# Coverage is honestly expected to be lower for this category than for phones/SSDs: many laptop listings
+# (see the "Lenovo IdeaPad Slim 5 14ITL05" fixture in tests/conftest.py) name a model number in the title
+# with the real spec only in a feed field or description this formula cannot see without A2 supplying it as
+# evidence. That gap is real and is exactly what the coverage report (score_quality's "Raport końcowy") is
+# for -- it is not something this formula should paper over by guessing.
+category: laptopy
+required_attrs: [ram_gb, capacity_gb]
+utility: >-
+  0.55 * norm(ram_gb, 4, 32)
+  + 0.45 * norm(capacity_gb, 128, 2048)
+weights:
+  value: 0.40
+  reliability: 0.25
+  deal: 0.20
+  risk: 0.15

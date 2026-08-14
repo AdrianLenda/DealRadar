@@ -1,0 +1,11 @@
+# Pepper.pl hot-deals RSS (ARCHITEKTURA.md section 6: "kanał RSS gorących okazji ... szybki tor systemu").
+# Paired with hooks.PepperTitlePriceHook, which fills price_gross from a "<amount> zł" pattern in the title
+# when (as is common) the RSS item carries no separate structured price field.
+assume_new_if_undeclared: true
+currency_default: PLN
+fields:
+  title: [title]
+  description: [description, summary]
+  url: [link, url]
+  price_gross: [price]
+  category_raw: [category]

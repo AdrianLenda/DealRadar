@@ -1,0 +1,106 @@
+# DealRadar category tree + source-category mapping (owner: A2, see prompty/A2-normalizator.md section 5).
+#
+# Two sections:
+#   categories -- DealRadar's own small category tree, inserted into the `category` table (A0 schema) on
+#                 every normalize run via CategoryMap.ensure_categories (idempotent, keyed by unique `path`).
+#                 List parents before children.
+#   mappings   -- manual (source, raw source-category string) -> our category path. Only electronics are
+#                 mapped at launch per the task spec ("Zamapuj na start tylko elektronikę"); every source
+#                 category not listed here resolves to category_id = None and keeps flowing through the
+#                 pipeline uncategorized -- that is correct behavior (Z4), not a bug. Unmapped categories
+#                 seen during a run are counted and surfaced in the NormalizeReport, sorted by frequency, as
+#                 next week's mapping backlog.
+#
+# Lookup keys are matched case-insensitively with whitespace collapsed; the "default" bucket is tried for
+# every source when no source-specific entry exists, for generic labels shared across shops (e.g. "SSD").
+
+categories:
+  - path: elektronika
+    name: Elektronika
+  - path: elektronika/dyski_ssd
+    name: Dyski SSD
+    parent: elektronika
+  - path: elektronika/dyski_hdd
+    name: Dyski HDD
+    parent: elektronika
+  - path: elektronika/monitory
+    name: Monitory
+    parent: elektronika
+  - path: elektronika/laptopy
+    name: Laptopy
+    parent: elektronika
+  - path: elektronika/telefony
+    name: Telefony
+    parent: elektronika
+  - path: elektronika/powerbanki
+    name: Powerbanki
+    parent: elektronika
+  - path: elektronika/sluchawki
+    name: Słuchawki
+    parent: elektronika
+  - path: elektronika/rtv
+    name: RTV
+    parent: elektronika
+  - path: elektronika/rtv/telewizory
+    name: Telewizory
+    parent: elektronika/rtv
+  - path: elektronika/rtv/soundbary
+    name: Soundbary i głośniki
+    parent: elektronika/rtv
+
+mappings:
+  x-kom:
+    "dyski ssd": elektronika/dyski_ssd
+    "dyski ssd m.2": elektronika/dyski_ssd
+    "dyski hdd": elektronika/dyski_hdd
+    "monitory": elektronika/monitory
+    "laptopy": elektronika/laptopy
+    "smartfony": elektronika/telefony
+    "powerbanki": elektronika/powerbanki
+    "słuchawki": elektronika/sluchawki
+    "telewizory": elektronika/rtv/telewizory
+    "soundbary": elektronika/rtv/soundbary
+
+  mediaexpert:
+    "dyski ssd": elektronika/dyski_ssd
+    "dyski twarde": elektronika/dyski_hdd
+    "monitory komputerowe": elektronika/monitory
+    "laptopy i ultrabooki": elektronika/laptopy
+    "telefony komórkowe": elektronika/telefony
+    "powerbanki": elektronika/powerbanki
+    "słuchawki bezprzewodowe": elektronika/sluchawki
+    "słuchawki przewodowe": elektronika/sluchawki
+    "telewizory": elektronika/rtv/telewizory
+
+  allegro:
+    "komputery > dyski ssd": elektronika/dyski_ssd
+    "komputery > dyski hdd": elektronika/dyski_hdd
+    "komputery > monitory": elektronika/monitory
+    "komputery > laptopy": elektronika/laptopy
+    "telefony i akcesoria > smartfony": elektronika/telefony
+    "akcesoria gsm > powerbanki": elektronika/powerbanki
+    "audio i hi-fi > słuchawki": elektronika/sluchawki
+    "rtv i agd > telewizory": elektronika/rtv/telewizory
+
+  ibood:
+    "computers & electronics": elektronika
+    "phones & accessories": elektronika/telefony
+    "audio": elektronika/rtv
+
+  default:
+    "ssd": elektronika/dyski_ssd
+    "hdd": elektronika/dyski_hdd
+    "monitor": elektronika/monitory
+    "monitory": elektronika/monitory
+    "laptop": elektronika/laptopy
+    "laptopy": elektronika/laptopy
+    "smartfon": elektronika/telefony
+    "smartfony": elektronika/telefony
+    "telefon": elektronika/telefony
+    "powerbank": elektronika/powerbanki
+    "powerbanki": elektronika/powerbanki
+    "sluchawki": elektronika/sluchawki
+    "słuchawki": elektronika/sluchawki
+    "tv": elektronika/rtv/telewizory
+    "telewizor": elektronika/rtv/telewizory
+    "telewizory": elektronika/rtv/telewizory

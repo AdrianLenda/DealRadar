@@ -1,0 +1,21 @@
+# Utility formula for elektronika/dyski_ssd (owner: A5, ARCHITEKTURA.md sec. 9 / prompty/A5-ocena-jakosci.md).
+#
+# `category` must equal the leaf segment of category.path (e.g. "elektronika/dyski_ssd" -> "dyski_ssd").
+# `required_attrs` are looked up in product_attr.value_num; if ANY is missing for a product, the "value"
+# component is None for that product (Z4 -- no fabricated utility number).
+#
+# Real extraction coverage today (see src/dealradar/matching/attrs.py + normalize/attrs.py): titles reliably
+# yield `capacity_gb` (TB titles are converted to GB, e.g. "2TB" -> 2048). No collector/normalizer currently
+# extracts sequential read speed (MB/s) from a title or feed field, so `read_mbs` is deliberately left OUT
+# of required_attrs -- it stays as an optional bonus term for the day a feed_field or spec-sheet extractor
+# supplies it. The safe expression evaluator resolves an absent, non-required variable to 0.0, and this
+# formula is written so that maps to "no bonus", never a fabricated advantage:
+#   norm(0, 500, 7000) clips to 0.0 -> (1 + 0.3*0) = 1.0 -> utility = capacity_gb / 1024 unchanged.
+category: dyski_ssd
+required_attrs: [capacity_gb]
+utility: "(capacity_gb / 1024) * (1 + 0.3 * norm(read_mbs, 500, 7000))"
+weights:
+  value: 0.40
+  reliability: 0.30
+  deal: 0.20
+  risk: 0.10

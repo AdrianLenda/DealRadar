@@ -1,0 +1,51 @@
+{
+  "SearchResult": {
+    "TotalResultCount": 2,
+    "SearchURL": "https://www.amazon.pl/s?k=dysk+SSD",
+    "Items": [
+      {
+        "ASIN": "B0BHJVJ5Y8",
+        "DetailPageURL": "https://www.amazon.pl/dp/B0BHJVJ5Y8",
+        "ItemInfo": {
+          "Title": {"DisplayValue": "Samsung 990 PRO 2TB M.2 NVMe SSD"},
+          "ByLineInfo": {
+            "Brand": {"DisplayValue": "Samsung"},
+            "Manufacturer": {"DisplayValue": "Samsung"}
+          },
+          "ExternalIds": {"EANs": {"DisplayValues": ["8806094962078"]}}
+        },
+        "Offers": {
+          "Listings": [
+            {
+              "Price": {"Amount": 649.0, "Currency": "PLN", "DisplayAmount": "649,00 zl"},
+              "Condition": {"Value": "New"},
+              "DeliveryInfo": {"IsPrimeEligible": true},
+              "MerchantInfo": {"Name": "Amazon.pl"}
+            }
+          ]
+        },
+        "CustomerReviews": {"Count": 1284, "StarRating": {"Value": 4.7}}
+      },
+      {
+        "ASIN": "B09XYZ1234",
+        "DetailPageURL": "https://www.amazon.pl/dp/B09XYZ1234",
+        "ItemInfo": {
+          "Title": {"DisplayValue": "Crucial P3 1TB M.2 NVMe SSD"},
+          "ByLineInfo": {"Brand": {"DisplayValue": "Crucial"}},
+          "ExternalIds": {}
+        },
+        "Offers": {
+          "Listings": [
+            {
+              "Price": {"Amount": 279.0, "Currency": "PLN", "DisplayAmount": "279,00 zl"},
+              "Condition": {"Value": "New"},
+              "DeliveryInfo": {"IsPrimeEligible": true},
+              "MerchantInfo": {"Name": "Amazon.pl"}
+            }
+          ]
+        },
+        "CustomerReviews": {"Count": 5321, "StarRating": {"Value": 4.6}}
+      }
+    ]
+  }
+}

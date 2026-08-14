@@ -1,0 +1,21 @@
+# Utility formula for elektronika/sluchawki (owner: A5).
+#
+# Headphones/earbuds are the weakest-signal category in the current extraction set: there is no dedicated
+# regex for battery life (hours), driver size, or ANC anywhere in normalize/attrs.py or matching/attrs.py.
+# The only numeric signals that ever fire on a headphone title today are the generic energy patterns
+# (capacity_mah for a wireless case/earbud battery) and, occasionally, charging power_w. Per Z4 and the task
+# spec's own framing ("jeśli nie wiesz, co czyni [produkt] dobrym, system też nie będzie wiedział"): this
+# formula is honestly thin because the underlying data is thin, not because the domain work was skipped.
+# A title like "Samsung Galaxy Buds FE" (tests/conftest.py fixture) states no extractable number at all and
+# will correctly get value=None here -- that is expected, not a bug, and is exactly the kind of gap the
+# coverage report is meant to surface so a future extractor (battery-life-hours, driver-size-mm) can close it.
+category: sluchawki
+required_attrs: [capacity_mah]
+utility: >-
+  capacity_mah
+  + 50 * norm(power_w, 2, 20)
+weights:
+  value: 0.35
+  reliability: 0.30
+  deal: 0.20
+  risk: 0.15

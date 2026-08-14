@@ -1,0 +1,14 @@
+# Fallback field mapping for any source registered with kind: rss that has no dedicated
+# config/normalizers/<name>.yaml yet. RSS deal channels are sparse (A1 spec: "Rekord RSS jest ubogi --
+# tytuł, link, cena w tytule, opis") so most canonical fields simply won't be found here; that is expected,
+# not a bug -- price/brand/attrs get a best-effort pass from title/description text instead (see hooks.py's
+# PepperTitlePriceHook for the price-in-title fallback, and pipeline.py's title-based brand/attr extraction,
+# which runs regardless of whether a dedicated field was mapped).
+assume_new_if_undeclared: true
+currency_default: PLN
+fields:
+  title: [title]
+  description: [description, summary]
+  url: [link, url]
+  price_gross: [price]
+  category_raw: [category]

@@ -1,0 +1,22 @@
+# Example affiliate-feed field mapping for a specific Polish retailer (x-kom), demonstrating that adding a
+# new shop is a YAML file, not a code change (A2 task spec). Field names guessed from typical Polish
+# product-feed conventions (Ceneo/Google Shopping-style XML); adjust once A1's real feed_xml.py output for
+# this shop is available -- that adjustment stays inside this file.
+assume_new_if_undeclared: true
+currency_default: PLN
+fields:
+  title: [title, nazwa]
+  description: [description, opis]
+  url: [url, link]
+  ean: [ean, gtin, kod_ean]
+  price_gross: [price, cena]
+  shipping_cost: [shipping_cost, koszt_dostawy]
+  currency: [currency, waluta]
+  list_price_claimed: [price_before, cena_przed_obnizka]
+  brand: [brand, marka]
+  mpn: [mpn, kod_producenta]
+  category_raw: [category, kategoria]
+  rating_avg: [rating, ocena]
+  rating_count: [rating_count, liczba_ocen]
+  warranty_months: [warranty_months, gwarancja_miesiace]
+  in_stock: [in_stock, dostepnosc]

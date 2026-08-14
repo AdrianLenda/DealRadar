@@ -1,0 +1,115 @@
+# DealRadar source registry (ARCHITEKTURA.md section 5, table `source`).
+# risk_prior: 0.0 (most trusted, e.g. x-kom) .. 1.0 (least trusted) -- feeds the risk component of
+# quality_score (A5). Collector-specific fields (rps, auth env var names, feed URLs, field mappings)
+# are added per-source by A1/A2; config.py validates the fields below and passes the rest through
+# (SourceConfig uses extra="allow").
+
+sources:
+  - name: dummy
+    kind: api
+    base_url: "https://example.invalid/dummy"
+    enabled: true
+    risk_prior: 0.0
+    # Smoke-test source with no real collector behind it — exists so
+    # `dealradar collect --source dummy` has something valid to resolve against (A0 definition-of-done #4).
+
+  - name: allegro
+    kind: api
+    base_url: "https://api.allegro.pl"
+    enabled: false
+    risk_prior: 0.1
+    rps: 2.0
+    # OAuth2 client credentials via ALLEGRO_CLIENT_ID / ALLEGRO_CLIENT_SECRET (.env). Owner: A1.
+    #
+    # user_agent is MANDATORY for Allegro: they block the API key outright when it is missing or not in
+    # their required format. Generate yours at https://apps.developer.allegro.pl/user-agent and paste the
+    # exact result below. Format is `AppName/version (+contact-url)` -- the URL must be a real contact
+    # point you control (your repo, site, or a mailto:), NOT the generator's `company.com` placeholder.
+    user_agent: "DealRadar/0.1.0 (+REPLACE_ME_WITH_YOUR_CONTACT_URL)"
+    #
+    # What to search for. Each phrase is one paginated SearchItems sweep; these match the categories A5
+    # actually has utility formulas for (config/categories/*.yaml), so scored products land in a peer group.
+    queries:
+      - "dysk SSD"
+      - "monitor"
+      - "powerbank"
+      - "laptop"
+      - "smartfon"
+      - "słuchawki"
+
+  - name: pepper
+    kind: rss
+    base_url: "https://www.pepper.pl/rss/hot"
+    enabled: true
+    risk_prior: 0.05
+    # Collector implemented (collectors/pepper_rss.py) and covered by offline tests against a recorded
+    # fixture. The base_url above is Pepper's real hot-deals RSS path but has not been fetched live from
+    # this environment (no outbound network in the agent sandbox) -- verify the exact URL/shape once this
+    # runs somewhere with internet access, before relying on it unattended. Owner: A1.
+
+  - name: ibood
+    kind: feed
+    base_url: "https://www.ibood.com/feed"
+    enabled: true
+    risk_prior: 0.1
+    # Collector implemented (collectors/ibood.py), expects JSON: either {"deals": [...]} or a bare list.
+    # Same caveat as pepper above: base_url is a plausible placeholder, not verified against the live feed
+    # from this sandbox. If iBood's real feed is XML instead of JSON, point this at a feed_xml-style entry
+    # instead (see the awin_template example below) rather than editing ibood.py. Owner: A1.
+
+  - name: aliexpress
+    kind: api
+    base_url: "https://api.aliexpress.com"
+    enabled: false
+    risk_prior: 0.4
+    # Requires ALIEXPRESS_APP_KEY / ALIEXPRESS_APP_SECRET; collector must disable itself gracefully
+    # (log "disabled: no credentials", return an empty iterator) when they are unset. Owner: A1.
+    # Implemented (collectors/aliexpress.py) but left disabled: no affiliate account/keys exist in this
+    # environment, and per ARCHITEKTURA.md §7 AliExpress needs account approval, not just an API key.
+    # Only the credential-missing path is exercised by tests -- see the A1 final report.
+
+  - name: amazon
+    kind: api
+    base_url: "https://webservices.amazon.pl/paapi5/searchitems"
+    enabled: false
+    risk_prior: 0.1
+    marketplace: "www.amazon.pl"
+    host: "webservices.amazon.pl"
+    region: "eu-west-1"
+    search_index: "All"
+    keywords:
+      - "dysk SSD"
+      - "powerbank"
+      - "monitor"
+    # Requires AMAZON_ACCESS_KEY / AMAZON_SECRET_KEY / AMAZON_PARTNER_TAG (.env) from an approved Amazon
+    # Associates account -- see .env.example and collectors/amazon_pa_api.py's module docstring.
+    # host/region/marketplace above are a best-effort guess for the Polish PA-API endpoint, NOT verified
+    # against a live Associates account (no outbound network in this environment). Confirm the correct
+    # host/region for your account/marketplace on your Associates PA-API credentials page before enabling
+    # this. `keywords` is what SearchItems searches for -- edit freely, no code change needed.
+
+  # --- Affiliate-network product feeds (generic FeedXmlCollector, ARCHITEKTURA.md §6) ---------------------
+  # One entry per shop; the same collector (collectors/feed_xml.py) drives all of them via config alone.
+  # This is a TEMPLATE, not a real registration: no Awin/TradeDoubler/Convertiser/Adtraction account exists
+  # in this environment, so there is no real feed URL or API key to put here yet. Once a human obtains one,
+  # copy this block per shop, fill in base_url + record_tag (or feed_format/delimiter for CSV networks),
+  # and flip enabled: true. record_tag/field names above are illustrative of a typical Awin XML feed, not
+  # verified against a live download.
+  - name: examplepl_awin_template
+    kind: feed
+    base_url: "https://productdata.awin.com/datafeed/download/apiKey/REPLACE_ME/language/pl/format/xml"
+    enabled: false
+    risk_prior: 0.05
+    feed_format: xml
+    record_tag: product          # repeating element per <merchant><product>...</product></merchant>
+    id_field: aw_product_id      # falls back to a content hash if a row lacks this field
+    # field_map is documentation for A2 (which raw field to normalize as which canonical Offer field) --
+    # feed_xml.py itself does not rename anything, it stores every raw field as-is (Z1).
+    field_map:
+      ean: ean
+      price_gross: search_price
+      title: product_name
+      brand: brand_name
+      url: merchant_deep_link
+      in_stock: in_stock
+      category_raw: category_name

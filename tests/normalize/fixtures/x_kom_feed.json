@@ -1,0 +1,68 @@
+[
+  {
+    "external_id": "xk-ssd-990pro-2tb",
+    "title": "Dysk SSD Samsung 990 PRO 2TB M.2 NVMe NOWY GWARANCJA 24m",
+    "url": "https://x-kom.example/ssd-990pro-2tb",
+    "ean": "4006381333931",
+    "price": "1 299,00 zł",
+    "shipping_cost": "0,00",
+    "brand": "Samsung",
+    "mpn": "MZ-V9P2T0BW",
+    "category": "Dyski SSD",
+    "currency": "PLN"
+  },
+  {
+    "external_id": "xk-lg-27gp850",
+    "title": "Monitor LG UltraGear 27GP850 27\" 165Hz 2560x1440",
+    "url": "https://x-kom.example/lg-27gp850",
+    "ean": "3017620422003",
+    "price": "1.299,00",
+    "category": "Monitory",
+    "brand": "LG"
+  },
+  {
+    "external_id": "xk-duracell-aa-2pak",
+    "title": "Baterie Duracell AA 2-pak",
+    "url": "https://x-kom.example/duracell-aa-2pak",
+    "price": "19,99 zł",
+    "shipping_cost": "0",
+    "ean": "4006381333932",
+    "brand": "Duracell",
+    "category": "Akcesoria RTV"
+  },
+  {
+    "external_id": "xk-missing-title",
+    "title": "",
+    "url": "https://x-kom.example/missing-title",
+    "price": "99,99 zł"
+  },
+  {
+    "external_id": "xk-missing-url",
+    "title": "Kabel USB-C 1,5 m 65W",
+    "price": "29,99 zł",
+    "shipping_cost": "0"
+  },
+  {
+    "external_id": "xk-unparseable-price",
+    "title": "Zestaw słuchawkowy bezprzewodowy XYZ",
+    "url": "https://x-kom.example/xyz-headset",
+    "price": "zapytaj o cenę"
+  },
+  {
+    "external_id": "xk-xiaomi-note13",
+    "title": "Xiaomi Redmi Note 13 8/256GB",
+    "url": "https://x-kom.example/redmi-note13",
+    "ean": "96385074",
+    "price": "od 999 zł",
+    "shipping_cost": "0",
+    "category": "Smartfony"
+  },
+  {
+    "external_id": "xk-anker-powerbank",
+    "title": "Powerbank Anker PowerCore 20000mAh 22.5W",
+    "url": "https://x-kom.example/anker-powercore-20000",
+    "price": "159.99",
+    "shipping_cost": "9.99",
+    "category": "Powerbanki"
+  }
+]

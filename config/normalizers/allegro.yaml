@@ -1,0 +1,29 @@
+# Allegro official REST API (ARCHITEKTURA.md section 6: "oferty często mają EAN w parametrach").
+# assume_new_if_undeclared MUST stay false: Allegro is a peer-to-peer marketplace where a seller silently
+# omitting a condition is common and genuinely means "unknown", not "new" (A2 task spec, section 4).
+#
+# Paired with hooks.AllegroParametersHook, which additionally pulls ean/brand/condition out of the
+# `parameters: [{name, value}, ...]` array the real Allegro offer-details API returns when they are not
+# present as flat top-level fields. NOTE for A1/A6 (flagged in the A2 final report): if A1's collector ends
+# up handing normalize a *nested* price object (Allegro's real API shape is `sellingMode.price.amount` /
+# `.currency`, not flat top-level fields), this file's price_gross/currency candidates won't find it -- add
+# a small AllegroParametersHook-style flattening step or extra candidate keys once A1's real payload shape
+# is known. That is a one-file/one-method change, not a redesign, which is the point of this architecture.
+assume_new_if_undeclared: false
+currency_default: PLN
+fields:
+  title: [title, name]
+  description: [description]
+  url: [url, offerUrl]
+  ean: [ean, gtin]
+  price_gross: [price, price_gross]
+  shipping_cost: [shipping_cost, delivery_price]
+  currency: [currency]
+  list_price_claimed: [price_before]
+  brand: [brand]
+  mpn: [mpn, sku]
+  category_raw: [category, category_path]
+  seller: [seller, seller_login]
+  seller_rating: [seller_rating]
+  condition_text: [condition]
+  in_stock: [in_stock, available]

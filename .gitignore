@@ -1,0 +1,18 @@
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.egg-info/
+build/
+dist/
+.mypy_cache/
+.pytest_cache/
+
+# Runtime data — never committed, always reproducible via `dealradar db migrate` / `dealradar rebuild`.
+*.db
+*.db-wal
+*.db-shm
+.cache/
+
+# Secrets — see .env.example for the list of variables that belong here.
+.env

@@ -1,0 +1,49 @@
+{
+  "deals": [
+    {
+      "id": "12345",
+      "title": "Apple AirPods Pro (2. generacji)",
+      "subtitle": "Refurbished, klasa A",
+      "price": "399.00",
+      "was_price": "899.00",
+      "currency": "PLN",
+      "url": "https://www.ibood.com/pl/deal/12345",
+      "image": "https://img.ibood.com/12345.jpg",
+      "stock": "available",
+      "ean": "0194252057626",
+      "starts_at": "2026-08-10T08:00:00Z",
+      "ends_at": "2026-08-11T08:00:00Z",
+      "category": "Audio"
+    },
+    {
+      "id": "12346",
+      "title": "Xiaomi Robot Vacuum S10",
+      "subtitle": null,
+      "price": "799.00",
+      "was_price": "1499.00",
+      "currency": "PLN",
+      "url": "https://www.ibood.com/pl/deal/12346",
+      "image": "https://img.ibood.com/12346.jpg",
+      "stock": "available",
+      "ean": null,
+      "starts_at": "2026-08-10T08:00:00Z",
+      "ends_at": "2026-08-11T08:00:00Z",
+      "category": "Dom"
+    },
+    {
+      "id": "12348",
+      "title": "Powerbank Baseus 20000mAh",
+      "subtitle": null,
+      "price": "119.00",
+      "was_price": "199.00",
+      "currency": "PLN",
+      "url": "https://www.ibood.com/pl/deal/12348",
+      "image": "https://img.ibood.com/12348.jpg",
+      "stock": "available",
+      "ean": "6953156301234",
+      "starts_at": "2026-08-11T08:00:00Z",
+      "ends_at": "2026-08-12T08:00:00Z",
+      "category": "Elektronika"
+    }
+  ]
+}

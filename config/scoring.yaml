@@ -1,0 +1,76 @@
+# DealRadar deal_score parameters (ARCHITEKTURA.md section 8 / prompty/A4-historia-i-deal-score.md).
+# Owner: A4. Every constant used by scoring/deal.py and scoring/history.py lives here, not hard-coded in
+# source, so the formula can be retuned (and the whole `deal` table rebuilt from raw per Z1) without a
+# code change.
+
+# --------------------------------------------------------------------------------------------------
+# Baza historyczna H: price_point produktu P, ostatnie `window_days` dni, po filtrach poniżej.
+# --------------------------------------------------------------------------------------------------
+history:
+  window_days: 90
+  # Fewer than this many history points for a product => cold start (basis="cross_shop").
+  min_points_for_history_basis: 3
+  filters:
+    condition: new
+    require_in_stock: true
+    min_match_confidence: 0.90
+    exclude_price_incomplete: true
+
+# sigma = max(mad_constant * mad, floor_fraction_of_median * med, absolute_floor)
+# absolute_floor (grosze) is an A4 addition beyond the literal architecture formula, guarding the
+# med=0/mad=0 degenerate case (all-free history) from a ZeroDivisionError -- see A4 final report.
+sigma:
+  mad_constant: 1.4826
+  floor_fraction_of_median: 0.01
+  absolute_floor_grosze: 1.0
+
+# raw = weights.z*s_z + weights.depth*s_depth + weights.rank*s_rank + weights.atl*s_atl
+weights:
+  z: 0.35
+  depth: 0.30
+  rank: 0.20
+  atl: 0.15
+
+clamps:
+  z_divisor: 4.0
+  depth_divisor: 0.35
+
+rank_scores:
+  cheapest_today: 1.0
+  top3_today: 0.5
+  other: 0.0
+
+# G1 -- bramka pokrycia: sufit (ceiling), nie kara/mnożnik. deal_score = 100 * min(raw, min(applicable caps)).
+coverage_gate:
+  history_lt_14_days_cap: 0.50
+  history_lt_30_days_cap: 0.70
+  min_competing_offers: 3
+  min_competing_offers_cap: 0.60
+  min_sources: 2
+  min_sources_cap: 0.80
+
+# Zimny start: history has fewer than history.min_points_for_history_basis points.
+# `med` is replaced by the median of today's prices across all offers of P; s_z is dropped (weight 0)
+# and its share redistributed proportionally across depth/rank/atl; ceiling fixed at `cap`.
+cold_start:
+  cap: 0.70
+
+snapshot:
+  # An offer missing from the latest collect run gets in_stock=False price_points for this many days
+  # before snapshot_prices stops writing anything for it at all (disappearance is a signal, not noise).
+  disappeared_grace_days: 7
+  compaction:
+    # price_points older than this (relative to the compaction run date) are eligible for compaction.
+    age_threshold_days: 180
+    # Kept rows per (offer_id, ISO week) among eligible weeks: the week's min, its max, and its median
+    # (an actual observed row, not a synthesized value -- Z1/Z2 forbid inventing a price).
+    keep_min: true
+    keep_max: true
+    keep_median: true
+
+# Zadanie 3: wskaźnik ściemy. Only offers whose product has at least this many distinct days of real
+# (basis="history") price history are eligible; a source's sample below min_sample_size gets
+# bullshit_index = None (Z4: absence, not a misleading zero).
+shop_credibility:
+  min_history_days: 30
+  min_sample_size: 20

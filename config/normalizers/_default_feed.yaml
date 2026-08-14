@@ -1,0 +1,27 @@
+# Fallback field mapping for any source registered with kind: feed that has no dedicated
+# config/normalizers/<name>.yaml yet -- e.g. a new affiliate-network shop A1 wires up before A2 writes its
+# specific file. Per-source files (x-kom.yaml, mediaexpert.yaml, ...) override this by exact source name.
+# Candidate key lists cover the field-name variants ARCHITEKTURA.md section 6 calls out explicitly
+# (ean/gtin/barcode, price/price_gross/cena) plus a few more seen across Awin/TradeDoubler/Convertiser feeds.
+assume_new_if_undeclared: true
+currency_default: PLN
+fields:
+  title: [title, name, nazwa, product_name, product_title]
+  description: [description, opis, long_description, desc]
+  url: [url, link, product_url, deeplink, producturl]
+  ean: [ean, gtin, gtin13, ean13, barcode, kod_ean]
+  price_gross: [price, price_gross, cena, cena_brutto, price_pln, cena_pln]
+  shipping_cost: [shipping_cost, shipping, koszt_dostawy, delivery_cost, shipping_price]
+  currency: [currency, waluta]
+  list_price_claimed: [price_before, old_price, cena_przed_obnizka, was_price, cena_regularna, cena_bazowa]
+  omnibus_min_30d: [omnibus_price, cena_najnizsza_30dni, omnibus_min_30d, lowest_price_30d]
+  brand: [brand, marka, producer, manufacturer, vendor]
+  mpn: [mpn, sku, part_number, kod_producenta, model]
+  category_raw: [category, kategoria, category_path, category_name]
+  seller: [seller, sprzedawca, shop_name, merchant]
+  seller_rating: [seller_rating, ocena_sprzedawcy]
+  condition_text: [condition, stan, item_condition]
+  rating_avg: [rating, ocena, avg_rating, product_rating]
+  rating_count: [rating_count, liczba_ocen, reviews_count, review_count]
+  warranty_months: [warranty_months, gwarancja_miesiace, warranty]
+  in_stock: [in_stock, dostepnosc, availability, stock, stan_magazynowy]

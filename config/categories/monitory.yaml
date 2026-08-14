@@ -1,0 +1,21 @@
+# Utility formula for elektronika/monitory (owner: A5).
+#
+# `diagonal_in` and `refresh_hz` are extracted under the SAME key names by both A2 (normalize/attrs.py) and
+# A3's title-regex fallback (matching/attrs.py), so they are the most reliable pair to require. Pixel count
+# is genuinely useful (a 1080p 27" panel is not the same product tier as a 4K 27" one) but A2 and A3 write
+# it under two different key names (resolution_px_w/h vs resolution_w/h) depending on extraction path, so it
+# is kept as an optional bonus rather than required -- requiring it would silently null out a lot of
+# otherwise-scoreable monitors over a naming quirk that isn't this module's to fix.
+# A missing optional resolution term evaluates to 0 contribution (additive, never inverted), per the same
+# "absent optional variable = 0.0 = no bonus, never a fabricated advantage" rule as every other formula here.
+category: monitory
+required_attrs: [diagonal_in, refresh_hz]
+utility: >-
+  0.45 * norm(diagonal_in, 21, 34)
+  + 0.45 * norm(refresh_hz, 60, 240)
+  + 0.10 * norm(resolution_px_w * resolution_px_h, 2073600, 8294400)
+weights:
+  value: 0.40
+  reliability: 0.30
+  deal: 0.20
+  risk: 0.10

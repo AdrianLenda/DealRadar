@@ -1,0 +1,20 @@
+[
+  {
+    "external_id": "pp-lg-27gp850",
+    "title": "[Deal] LG UltraGear 27GP850 27\" 165Hz -30% @ 1799 zł",
+    "link": "https://pepper.example/lg-27gp850",
+    "description": "Świetna okazja na monitor gamingowy, cena spadła z 2499 zł."
+  },
+  {
+    "external_id": "pp-lenovo-slim5-no-price",
+    "title": "[Gorące] Lenovo IdeaPad Slim 5 -15%",
+    "link": "https://pepper.example/lenovo-slim5",
+    "description": "Bez podanej ceny w tytule, warto sprawdzić w sklepie."
+  },
+  {
+    "external_id": "pp-kingston-nv2-1tb",
+    "title": "[Okazja] Kingston NV2 1TB SSD M.2 za 249 zł",
+    "link": "https://pepper.example/kingston-nv2-1tb",
+    "description": "Szybki dysk NVMe w dobrej cenie."
+  }
+]

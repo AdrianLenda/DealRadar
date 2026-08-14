@@ -1,0 +1,19 @@
+[
+  {
+    "external_id": "ib-samsung-buds-fe",
+    "title": "Samsung Galaxy Buds FE",
+    "url": "https://ibood.example/galaxy-buds-fe",
+    "price": "59.99",
+    "currency": "PLN",
+    "shipping_cost": "15.00",
+    "ean": "40170725"
+  },
+  {
+    "external_id": "ib-xiaomi-powerbank",
+    "title": "Xiaomi Powerbank 20000mAh 22.5W",
+    "url": "https://ibood.example/xiaomi-powerbank",
+    "price": "89.00",
+    "currency": "PLN",
+    "shipping_cost": "15.00"
+  }
+]

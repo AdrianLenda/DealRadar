@@ -1,0 +1,15 @@
+# iBood daily-deal feed (ARCHITEKTURA.md section 6: "feed dzienny, mały wolumen, trywialny").
+assume_new_if_undeclared: true
+currency_default: EUR
+fields:
+  title: [title, name]
+  description: [description]
+  url: [url, link]
+  ean: [ean, gtin]
+  price_gross: [price, price_gross]
+  shipping_cost: [shipping_cost, shipping]
+  currency: [currency]
+  list_price_claimed: [price_before, old_price]
+  brand: [brand]
+  category_raw: [category]
+  in_stock: [in_stock, available]

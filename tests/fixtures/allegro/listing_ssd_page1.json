@@ -1,0 +1,49 @@
+{
+  "items": {
+    "promoted": [
+      {
+        "id": "13998877661",
+        "name": "Dysk SSD Samsung 990 PRO 2TB M.2 NVMe PCIe 4.0",
+        "category": {"id": "257357", "name": "Dyski SSD"},
+        "sellingMode": {"format": "BUY_NOW", "price": {"amount": "899.00", "currency": "PLN"}},
+        "delivery": {"lowestPrice": {"amount": "0.00", "currency": "PLN"}},
+        "seller": {"login": "ssd-store", "superSeller": {"positiveRatingPercentage": 99}},
+        "stock": {"available": 12, "unit": "UNIT"},
+        "parameters": [
+          {"id": "225693", "name": "Pojemność dysku", "valuesLabels": ["2 TB"]},
+          {"id": "225698", "name": "EAN (GTIN)", "valuesLabels": ["4006381333931"]},
+          {"id": "11323", "name": "Stan", "valuesLabels": ["Nowy"]}
+        ]
+      }
+    ],
+    "regular": [
+      {
+        "id": "13998877662",
+        "name": "Dysk SSD Kingston NV2 1TB M.2 PCIe 4.0 NVMe",
+        "category": {"id": "257357", "name": "Dyski SSD"},
+        "sellingMode": {"format": "BUY_NOW", "price": {"amount": "249.99", "currency": "PLN"}},
+        "delivery": {"lowestPrice": {"amount": "9.99", "currency": "PLN"}},
+        "seller": {"login": "komputery24", "superSeller": {"positiveRatingPercentage": 97}},
+        "stock": {"available": 30, "unit": "UNIT"},
+        "parameters": [
+          {"id": "225693", "name": "Pojemność dysku", "valuesLabels": ["1 TB"]},
+          {"id": "11323", "name": "Stan", "valuesLabels": ["Nowy"]}
+        ]
+      },
+      {
+        "id": "13998877663",
+        "name": "Dysk SSD WD Blue SA510 500GB SATA III poleasingowy",
+        "category": {"id": "257357", "name": "Dyski SSD"},
+        "sellingMode": {"format": "BUY_NOW", "price": {"amount": "119.00", "currency": "PLN"}},
+        "delivery": {"lowestPrice": {"amount": "0.00", "currency": "PLN"}},
+        "seller": {"login": "it-resell", "superSeller": {"positiveRatingPercentage": 95}},
+        "stock": {"available": 4, "unit": "UNIT"},
+        "parameters": [
+          {"id": "225693", "name": "Pojemność dysku", "valuesLabels": ["500 GB"]},
+          {"id": "11323", "name": "Stan", "valuesLabels": ["Używany"]}
+        ]
+      }
+    ]
+  },
+  "searchMeta": {"availableCount": 3}
+}

@@ -1,0 +1,18 @@
+# Utility formula for elektronika/telefony (owner: A5).
+#
+# Same "8/256GB" shorthand as laptopy.yaml supplies ram_gb + capacity_gb together for most phone titles
+# (see the "Xiaomi Redmi Note 13 8/256GB" fixture in tests/conftest.py -- ram_gb=8, capacity_gb=256). Battery
+# capacity_mah is a real differentiator between otherwise-similar phones and is commonly stated on its own
+# in titles/feeds, but is kept optional (not required) so a phone missing only the battery figure still gets
+# scored on RAM/storage instead of losing the whole value component over one absent field.
+category: telefony
+required_attrs: [ram_gb, capacity_gb]
+utility: >-
+  0.35 * norm(ram_gb, 3, 16)
+  + 0.45 * norm(capacity_gb, 32, 1024)
+  + 0.20 * norm(capacity_mah, 3000, 6000)
+weights:
+  value: 0.40
+  reliability: 0.30
+  deal: 0.20
+  risk: 0.10

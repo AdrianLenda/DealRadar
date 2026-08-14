@@ -1,0 +1,25 @@
+# Fallback field mapping for any source registered with kind: api that has no dedicated
+# config/normalizers/<name>.yaml yet. assume_new_if_undeclared is false by default for this kind because
+# the "api" bucket is dominated by peer-to-peer marketplaces (Allegro, AliExpress) where an unstated
+# condition genuinely means "unknown", not "new" (A2 task spec, section 4).
+assume_new_if_undeclared: false
+currency_default: PLN
+fields:
+  title: [title, name]
+  description: [description, longDescription]
+  url: [url, offerUrl, link]
+  ean: [ean, gtin, barcode]
+  price_gross: [price, price_gross, amount]
+  shipping_cost: [shipping_cost, delivery_price]
+  currency: [currency]
+  list_price_claimed: [price_before, regular_price]
+  brand: [brand]
+  mpn: [mpn, sku]
+  category_raw: [category, category_path]
+  seller: [seller, seller_login]
+  seller_rating: [seller_rating]
+  condition_text: [condition]
+  rating_avg: [rating]
+  rating_count: [rating_count]
+  warranty_months: [warranty_months]
+  in_stock: [in_stock, available]

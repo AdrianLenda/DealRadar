@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<merchant>
+<product>
+<aw_product_id>MX-991</aw_product_id>
+<product_name>Samsung Galaxy Buds FE Białe</product_name>
+<ean>8806094928591</ean>
+<brand_name>Samsung</brand_name>
+<search_price>249.00</search_price>
+<currency>PLN</currency>
+<merchant_deep_link>https://shop.example.pl/p/mx-991</merchant_deep_link>
+<in_stock>1</in_stock>
+<delivery_cost>0.00</delivery_cost>
+<category_name>Audio &gt; Słuchawki</category_name>
+</product>
+<product>
+<aw_product_id>MX-992</aw_product_id>
+<product_name>Dysk SSD Kingston NV2 1TB M.2 NVMe</product_name>
+<ean>740617328947</ean>
+<brand_name>Kingston</brand_name>
+<search_price>249.99</search_price>
+<currency>PLN</currency>
+<merchant_deep_link>https://shop.example.pl/p/mx-992</merchant_deep_link>
+<in_stock>1</in_stock>
+<delivery_cost>9.99</delivery_cost>
+<category_name>Komputery &gt; Dyski SSD</category_name>
+</product>
+<product>
+<aw_product_id>MX-993</aw_product_id>
+<product_name>Powerbank Anker 20000mAh</product_name>
+<ean></ean>
+<brand_name>Anker</brand_name>
+<search_price>159.00</search_price>
+<currency>PLN</currency>
+<merchant_deep_link>https://shop.example.pl/p/mx-993</merchant_deep_link>
+<in_stock>0</in_stock>
+<delivery_cost>0.00</delivery_cost>
+<category_name>Elektronika &gt; Powerbanki</category_name>
+</product>
+<product>
+<product_name>Ładowarka USB-C 65W (bez żadnego pola id w feedzie)</product_name>
+<ean></ean>
+<brand_name>Baseus</brand_name>
+<search_price>89.00</search_price>
+<currency>PLN</currency>
+<merchant_deep_link>https://shop.example.pl/p/mx-994</merchant_deep_link>
+<in_stock>1</in_stock>
+<delivery_cost>0.00</delivery_cost>
+<category_name>Elektronika &gt; Ładowarki</category_name>
+</product>
+</merchant>

@@ -1,0 +1,4 @@
+id	title	price	barcode	availability	brand
+CV-2001	Etui na telefon iPhone 15 Skórzane	49.99	5901234000012	in_stock	NoName
+CV-2002	Kabel USB-C do Lightning 1m	29.99		in_stock	Baseus
+CV-2003	Stacja dokująca USB-C 8w1	179.00	5901234000029	out_of_stock	Ugreen

@@ -1,0 +1,139 @@
+# DealRadar brand alias table (owner: A2, see prompty/A2-normalizator.md section 3).
+# canonical_brand: [alias1, alias2, ...] -- matched case-insensitively, on word boundaries only
+# (so "Xiaomi" must not match inside an unrelated longer word). The canonical key itself is always
+# also matched, so it does not need to be repeated in its own alias list.
+#
+# A0 seeded a handful of obvious examples so config.py had something real to validate at startup; A2 (this
+# file) owns growing the list. Coverage here directly bounds brand_norm coverage in the normalize report --
+# an offer whose declared/title brand isn't in this table gets brand_norm = None (Z4: never guessed).
+# Scope: consumer electronics only, matching the categories mapped in config/category_map.yaml (storage,
+# monitors, laptops, phones, powerbanks, headphones, RTV) plus the handful of accessory/battery brands that
+# show up constantly in the same listings (Duracell, Baseus).
+
+aliases:
+  samsung:
+    - Samsung
+    - SAMSUNG
+    - "Samsung Electronics"
+  apple:
+    - Apple
+    - APPLE
+  xiaomi:
+    - Xiaomi
+    - "Xiaomi Inc"
+    - Mi
+    - Redmi
+    - POCO
+  lg:
+    - LG
+    - "LG Electronics"
+  lenovo:
+    - Lenovo
+    - LENOVO
+    - ThinkPad
+  anker:
+    - Anker
+    - ANKER
+  dell:
+    - Dell
+    - DELL
+    - "Dell Technologies"
+  hp:
+    - HP
+    - "Hewlett-Packard"
+    - "Hewlett Packard"
+  asus:
+    - Asus
+    - ASUS
+    - ASUSTeK
+  acer:
+    - Acer
+    - ACER
+  msi:
+    - MSI
+    - "Micro-Star International"
+  huawei:
+    - Huawei
+    - HUAWEI
+  honor:
+    - Honor
+    - HONOR
+  oneplus:
+    - OnePlus
+    - "One Plus"
+  sony:
+    - Sony
+    - SONY
+  jbl:
+    - JBL
+  baseus:
+    - Baseus
+    - BASEUS
+  duracell:
+    - Duracell
+    - DURACELL
+  kingston:
+    - Kingston
+    - "Kingston Technology"
+  wd:
+    - "Western Digital"
+    - WD
+    - "WD Blue"
+    - "WD Black"
+  seagate:
+    - Seagate
+    - SEAGATE
+  crucial:
+    - Crucial
+    - CRUCIAL
+  corsair:
+    - Corsair
+    - CORSAIR
+  logitech:
+    - Logitech
+    - LOGITECH
+    - "Logitech G"
+  razer:
+    - Razer
+    - RAZER
+  philips:
+    - Philips
+    - PHILIPS
+  tcl:
+    - TCL
+  hisense:
+    - Hisense
+    - HISENSE
+  nokia:
+    - Nokia
+    - NOKIA
+  motorola:
+    - Motorola
+    - MOTOROLA
+  realme:
+    - realme
+    - Realme
+    - REALME
+  oppo:
+    - OPPO
+    - Oppo
+  google:
+    - Google
+    - "Google Pixel"
+  microsoft:
+    - Microsoft
+    - "Microsoft Surface"
+  panasonic:
+    - Panasonic
+    - PANASONIC
+  viewsonic:
+    - ViewSonic
+    - Viewsonic
+  aoc:
+    - AOC
+  benq:
+    - BenQ
+    - Benq
+  toshiba:
+    - Toshiba
+    - TOSHIBA

@@ -1,0 +1,21 @@
+# Utility formula for elektronika/powerbanki (owner: A5).
+#
+# ARCHITEKTURA.md's own illustrative example uses `capacity_wh`, the physically correct energy unit -- but
+# A2's extractor (normalize/attrs.py `_extract_energy`) deliberately refuses to fabricate Wh from a bare
+# mAh figure when no voltage is stated ("converting to Wh would require assuming a cell chemistry/voltage we
+# don't know"), which is most powerbank listings in practice. Requiring capacity_wh would therefore null out
+# almost every real powerbank offer. Consumer power banks are overwhelmingly single/dual-cell Li-ion at a
+# similar nominal voltage, so `capacity_mah` alone is an honest, consistent-enough utility proxy across this
+# one category (not across categories) and is what is actually present in the data. capacity_wh, when a
+# listing does state it directly, `max()` picks whichever energy figure is larger instead of adding both
+# and double-counting the same battery.
+category: powerbanki
+required_attrs: [capacity_mah]
+utility: >-
+  max(capacity_mah, 3700 * capacity_wh)
+  + 50 * norm(power_w, 5, 100)
+weights:
+  value: 0.40
+  reliability: 0.30
+  deal: 0.20
+  risk: 0.10

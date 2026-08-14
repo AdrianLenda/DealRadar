@@ -1,0 +1,52 @@
+[
+  {
+    "external_id": "al-dell-5420-poleasing",
+    "title": "Laptop Dell Latitude 5420 poleasingowy i5/16GB/512GB",
+    "url": "https://allegro.example/dell-5420-poleasing",
+    "price": "1899,00",
+    "shipping_cost": "0",
+    "seller": "it-resell",
+    "seller_rating": 4.7,
+    "parameters": [
+      {"name": "Stan", "value": "Używany"},
+      {"name": "Marka", "value": "Dell"}
+    ]
+  },
+  {
+    "external_id": "al-anker-20000",
+    "title": "Powerbank Anker PowerCore 20000 mAh NOWY FV23",
+    "url": "https://allegro.example/anker-20000",
+    "price": "149,00",
+    "shipping_cost": "0",
+    "seller": "powerbank-shop",
+    "seller_rating": 4.6
+  },
+  {
+    "external_id": "al-dell-p2422h-used",
+    "title": "Monitor Dell P2422H używany, ślady eksploatacji",
+    "url": "https://allegro.example/dell-p2422h-used",
+    "price": "599,00",
+    "shipping_cost": "0",
+    "seller": "uzywane-monitory",
+    "seller_rating": 4.2
+  },
+  {
+    "external_id": "al-kingston-nv2-1tb",
+    "title": "Dysk SSD Kingston NV2 1TB M.2 NVMe",
+    "url": "https://allegro.example/kingston-nv2-1tb",
+    "price": "249,00",
+    "shipping_cost": "0",
+    "parameters": [
+      {"name": "EAN (GTIN)", "value": "5901234123457"}
+    ]
+  },
+  {
+    "external_id": "al-asus-vivobook-damaged",
+    "title": "Laptop Asus Vivobook (opakowanie uszkodzone)",
+    "url": "https://allegro.example/asus-vivobook-outlet",
+    "price": "1299,00",
+    "shipping_cost": "0",
+    "seller": "outlet-24",
+    "seller_rating": 4.0
+  }
+]
