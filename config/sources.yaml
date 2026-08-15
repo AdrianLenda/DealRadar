@@ -16,7 +16,7 @@ sources:
   - name: allegro
     kind: api
     base_url: "https://api.allegro.pl"
-    enabled: false
+    enabled: true
     risk_prior: 0.1
     rps: 2.0
     # OAuth2 client credentials via ALLEGRO_CLIENT_ID / ALLEGRO_CLIENT_SECRET (.env). Owner: A1.
@@ -25,7 +25,7 @@ sources:
     # their required format. Generate yours at https://apps.developer.allegro.pl/user-agent and paste the
     # exact result below. Format is `AppName/version (+contact-url)` -- the URL must be a real contact
     # point you control (your repo, site, or a mailto:), NOT the generator's `company.com` placeholder.
-    user_agent: "DealRadar/0.1.0 (+REPLACE_ME_WITH_YOUR_CONTACT_URL)"
+    user_agent: "DealRadar2000/1.0.0 (+https://github.com/AdrianLenda/DealRadar)"
     #
     # What to search for. Each phrase is one paginated SearchItems sweep; these match the categories A5
     # actually has utility formulas for (config/categories/*.yaml), so scored products land in a peer group.
