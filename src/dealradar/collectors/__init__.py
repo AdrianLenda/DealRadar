@@ -65,9 +65,17 @@ class TokenBucket:
             time.sleep((tokens - self._tokens) / self.rate_per_s)
 
 
+"""Headers describing how the body was encoded *on the wire*. They must never be cached, because we store
+`response.text` -- the body httpx has already decoded. Replaying a body labelled `Content-Encoding: gzip`
+that is in fact plain text makes httpx try to gunzip it again and die with "incorrect header check"; a
+stale `Content-Length` from the compressed form is wrong for the decoded text for the same reason."""
+_TRANSFER_HEADERS = frozenset({"content-encoding", "content-length", "transfer-encoding"})
+
+
 def _save_to_cache(path: Path, response: httpx.Response) -> None:
-    """Writes an httpx.Response's status, headers, and body to `path` as JSON, for offline replay in tests."""
-    payload = {"status_code": response.status_code, "headers": dict(response.headers), "text": response.text}
+    """Writes an httpx.Response's status, decoded body, and transport-neutral headers to `path` as JSON."""
+    headers = {k: v for k, v in response.headers.items() if k.lower() not in _TRANSFER_HEADERS}
+    payload = {"status_code": response.status_code, "headers": headers, "text": response.text}
     path.write_text(json.dumps(payload), encoding="utf-8")
 
 
