@@ -1,0 +1,25 @@
+# LowcyDeals.pl — read from schema.org Product JSON-LD on the homepage (its RSS is empty; see
+# config/sources.yaml). collectors/jsonld_page.py has already flattened the nested Product/offers/brand
+# shapes, so a plain field map reaches everything and no Python hook is needed here.
+#
+# One flattened product, confirmed live 2026-08-17:
+#   name "soundcore bezprzewodowe słuchawki nauszne Q30", price 209.00, currency "PLN",
+#   offer_url "https://www.lowcydeals.pl/okazja/soundcore-...", condition "…/NewCondition"
+#
+# No gtin/sku is published, so these stay unmatched singletons unless the fuzzy step finds a peer by
+# brand+title — correct behaviour per Z5, not a gap to paper over.
+assume_new_if_undeclared: true
+currency_default: PLN
+fields:
+  title: [name]
+  description: [description]
+  url: [offer_url, url, _page_url]
+  price_gross: [price]
+  currency: [currency]
+  ean: [gtin13, gtin, gtin12, gtin8]
+  mpn: [mpn, sku]
+  brand: [brand]
+  seller: [seller]
+  condition_text: [condition]
+  rating_avg: [rating]
+  rating_count: [rating_count]

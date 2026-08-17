@@ -32,6 +32,7 @@ from .allegro_api import AllegroApiCollector
 from .amazon_pa_api import AmazonPaApiCollector
 from .feed_xml import FeedXmlCollector
 from .ibood import IboodCollector
+from .jsonld_page import JsonLdPageCollector
 from .pepper_rss import PepperRssCollector
 
 logger = logging.getLogger("dealradar.collectors.runner")
@@ -50,6 +51,11 @@ _EXPLICIT_REGISTRY: dict[str, type[BaseCollector]] = {
 # Collector classes addressable by an explicit `collector:` key in sources.yaml, independent of source name.
 _COLLECTOR_BY_KEY: dict[str, type[BaseCollector]] = {
     "pepper_rss": PepperRssCollector,
+    # PepperRssCollector flattens any RSS <item>'s children generically and only adds pepper_temperature
+    # when a title actually carries one, so it serves as the plain RSS reader for other deal feeds too
+    # (LowcyChin). Aliased rather than duplicated; the Pepper-specific part is opt-in by data, not by class.
+    "rss": PepperRssCollector,
+    "jsonld_page": JsonLdPageCollector,
     "ibood": IboodCollector,
     "allegro_api": AllegroApiCollector,
     "aliexpress": AliexpressCollector,
@@ -110,6 +116,10 @@ def build_collector(
         )
     if cls is PepperRssCollector:
         return PepperRssCollector(url=entry.base_url, source_name=entry.name, **common)
+    if cls is JsonLdPageCollector:
+        return JsonLdPageCollector(
+            url=entry.base_url, urls=getattr(entry, "urls", None), source_name=entry.name, **common
+        )
     if cls is IboodCollector:
         return IboodCollector(url=entry.base_url, source_name=entry.name, **common)
     if cls is AllegroApiCollector:

@@ -1,0 +1,19 @@
+# LowcyChin.pl — curated AliExpress deals, delivered as a WordPress RSS feed.
+#
+# Shape of one <item>, confirmed live 2026-08-17:
+#   title    "Projektor Magcubic HY300 Pro za $27.37 / ~104zł"   <- price in USD *and* PLN
+#   category "Aliexpress.com" and a product category ("Projektor") — repeated element, so a list
+#   encoded  <p>...<a href="https://pl.aliexpress.com/item/1005010153412592.html?...">  <- item id
+#   link     the LowcyChin article, not the shop
+#
+# There is no structured price field at all, so hooks.LowcyChinHook does two things a flat field map
+# cannot: pull the PLN figure out of the title (never the USD one — we must not depend on an FX rate
+# that was correct only on the day the post was written), and lift the AliExpress item id out of the
+# encoded HTML so the same product is recognisable when it is posted again months later.
+assume_new_if_undeclared: true
+currency_default: PLN
+fields:
+  title: [title]
+  description: [description, encoded]
+  url: [link, guid]
+  category_raw: [category]

@@ -50,6 +50,7 @@ sources:
     base_url: "https://www.pepper.pl/rss/gor%C4%85ce"
     enabled: true
     risk_prior: 0.05
+    rps: 0.2
     # VERIFIED LIVE 2026-08-17: returns 200 with a real RSS body (30 items). The old `/rss/hot` value
     # worked only via a 301 to this canonical URL; pointing straight at it saves a redirect hop per fetch.
     # Pepper publishes several parallel channels, each capped at ~30 items -- the two below are separate
@@ -64,6 +65,7 @@ sources:
     base_url: "https://www.pepper.pl/rss/wszystkie"
     enabled: true
     risk_prior: 0.05
+    rps: 0.2
     # VERIFIED LIVE 2026-08-17: 200, 30 items. Unfiltered firehose -- lower average quality than /gorące
     # (no community vetting), but catches deals before they get hot.
 
@@ -73,6 +75,7 @@ sources:
     base_url: "https://www.pepper.pl/rss/grupa/elektronika"
     enabled: true
     risk_prior: 0.05
+    rps: 0.2
     # VERIFIED LIVE 2026-08-17: 200, 30 items. The highest-value Pepper channel for this project: it is
     # the one section that lines up with the categories A5 actually has utility formulas for
     # (config/categories/*.yaml), so its offers can reach a real 1-10 score rather than no_utility_formula.
@@ -82,6 +85,34 @@ sources:
     # fixture. The base_url above is Pepper's real hot-deals RSS path but has not been fetched live from
     # this environment (no outbound network in the agent sandbox) -- verify the exact URL/shape once this
     # runs somewhere with internet access, before relying on it unattended. Owner: A1.
+
+  - name: lowcychin
+    kind: rss
+    collector: rss
+    base_url: "https://lowcychin.pl/feed"
+    enabled: true
+    risk_prior: 0.4
+    # VERIFIED LIVE 2026-08-17: 200, 10 items. AliExpress deal curation ("Łowcy Chin").
+    # risk_prior 0.4 matches ARCHITEKTURA.md section 5's AliExpress figure -- long shipping, no warranty path,
+    # no-name goods. robots.txt names GPTBot/Amazonbot/MJ12bot/searchbot/Awariobot and allows Googlebot/
+    # Bingbot; there is no `User-agent: *` group, so no rule applies to us -- and an RSS feed exists to be
+    # read by machines. Titles carry the price twice ("za $27.37 / ~104zł") and content:encoded carries the
+    # direct pl.aliexpress.com item link, whose numeric item id is a stable per-product identifier -- the
+    # closest thing to an EAN this source can give (see config/normalizers/lowcychin.yaml).
+
+  - name: lowcydeals
+    kind: feed
+    collector: jsonld_page
+    base_url: "https://www.lowcydeals.pl/"
+    enabled: true
+    risk_prior: 0.2
+    rps: 0.5
+    # VERIFIED LIVE 2026-08-17: homepage carries 10 schema.org Product nodes with current PLN prices.
+    # Its RSS is a dead end -- a valid but empty envelope, lastBuildDate 2026-05-10, zero <item> -- and the
+    # sitemap lists only the homepage and a privacy policy, so JSON-LD on the page itself is the only route.
+    # robots.txt is the most permissive of the three sources: `User-agent: *` disallowing just /wp-admin/.
+    # Deliberately slow (rps 0.5): this is one small site, and we are reading its front page, not a feed
+    # built for bulk consumption.
 
   - name: ibood
     kind: feed
