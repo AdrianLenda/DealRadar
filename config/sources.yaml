@@ -8,17 +8,25 @@ sources:
   - name: dummy
     kind: api
     base_url: "https://example.invalid/dummy"
-    enabled: true
+    enabled: false
     risk_prior: 0.0
     # Smoke-test source with no real collector behind it — exists so
     # `dealradar collect --source dummy` has something valid to resolve against (A0 definition-of-done #4).
+    # DISABLED 2026-08-17: having it enabled put a guaranteed failure in every `dealradar run`'s
+    # sources_failed, which is noise that trains you to ignore the one field meant to catch real breakage
+    # (F5). `--source dummy` still resolves it by name regardless of this flag, so A0's check still works.
 
   - name: allegro
     kind: api
     base_url: "https://api.allegro.pl"
-    enabled: true
+    enabled: false
     risk_prior: 0.1
     rps: 2.0
+    # DISABLED 2026-08-17 pending Allegro's application verification, NOT because anything here is wrong:
+    # OAuth works (token 200, scope allegro:api:sale:offers:read granted) and /sale/categories returns 200,
+    # but /offers/listing answers 403 {"code":"VerificationRequired"} -- "Dostęp możliwy tylko dla
+    # zweryfikowanych aplikacji". Flip back to true once the app is verified in apps.developer.allegro.pl;
+    # nothing else needs to change. Left enabled it would just burn a failed API call every run.
     # OAuth2 client credentials via ALLEGRO_CLIENT_ID / ALLEGRO_CLIENT_SECRET (.env). Owner: A1.
     #
     # user_agent is MANDATORY for Allegro: they block the API key outright when it is missing or not in
