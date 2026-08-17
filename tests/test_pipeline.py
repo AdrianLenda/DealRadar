@@ -393,3 +393,35 @@ def test_rebuild_from_score_only_recomputes_deal_and_quality(db: Session) -> Non
     assert report.status != "failed"
     products_after = db.execute(text("SELECT id FROM product ORDER BY id")).scalars().all()
     assert products_before == products_after  # --from score never touches product/offer, only deal/quality
+
+
+def test_rebuild_survives_an_offer_whose_raw_record_no_longer_normalizes(db: Session) -> None:
+    """A stale offer still pointing at a product must not break `rebuild --from raw`.
+
+    Regression test for a crash found only against live data. `_clear_match_and_score_tables` used to
+    assume normalize_batch had already nulled every `offer.product_id` this run. That assumption breaks the
+    moment a raw record which used to normalize cleanly starts being rejected instead -- exactly what
+    happened when voucher rejection was added: the now-rejected offer's row is never rewritten, keeps its
+    old product_id, and `DELETE FROM product` dies on the foreign key. Simulated here by pointing an offer
+    at a product and then rebuilding, which is the same end state without depending on any one normalizer
+    rule staying the way it is today.
+    """
+    _seed_raw_offers(db)
+    cfg = _empty_config("sqlite:///:memory:")
+    pipeline.run_full(db, cfg, since=None, offline=True)
+
+    product_id = db.execute(text("SELECT id FROM product LIMIT 1")).scalar_one()
+    db.execute(
+        text("UPDATE offer SET product_id = :pid, match_confidence = 0.99, match_method = 'ean'"),
+        {"pid": product_id},
+    )
+    db.commit()
+
+    report = pipeline.rebuild(db, "raw", since=None)
+
+    assert report.status != "failed", f"rebuild failed: {report.notes}"
+    dangling = db.execute(
+        text("SELECT COUNT(*) FROM offer o LEFT JOIN product p ON p.id = o.product_id "
+             "WHERE o.product_id IS NOT NULL AND p.id IS NULL")
+    ).scalar_one()
+    assert dangling == 0, "rebuild left offers pointing at products that no longer exist"

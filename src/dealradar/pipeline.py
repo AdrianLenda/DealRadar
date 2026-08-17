@@ -532,10 +532,17 @@ def _database_url_from_session(session: Session) -> str:
 def _clear_match_and_score_tables(session: Session) -> None:
     """Deletes every row from product-derived tables, in FK-safe order, ahead of a from-raw rebuild.
 
-    Must run only *after* normalize_batch has already reset every offer.product_id to NULL this run (see
-    module docstring) -- otherwise deleting `product` while `offer.product_id` still references it would
-    violate the FK constraint (foreign_keys=ON, see db.build_engine). Safe to call on an empty database.
+    Releases every `offer.product_id` itself rather than assuming normalize_batch just did it. That
+    assumption held only while normalize re-touched every offer on every run, and it silently stops being
+    true the moment a raw record that used to normalize cleanly starts being rejected instead -- improve a
+    normalizer (say, start rejecting vouchers) and the now-rejected offer's stale row keeps its old
+    product_id, no longer gets rewritten, and `DELETE FROM product` dies on the FK. Rebuild is the one
+    command whose whole job is restoring derived state (Z1), so it must not be the command that breaks on
+    a stale pointer. Safe to call on an empty database.
     """
+    session.execute(
+        text("UPDATE offer SET product_id = NULL, match_confidence = NULL, match_method = NULL")
+    )
     for stmt in (
         "DELETE FROM deal",
         "DELETE FROM shop_credibility",

@@ -22,6 +22,7 @@ RejectReason = Literal[
     "fx_rate_unavailable",
     "unknown_source",
     "offer_validation_failed",
+    "not_a_product_offer",
 ]
 """Every reason normalize refuses to turn a raw_offer into an Offer. Keep this list exhaustive — the whole
 point of RejectedOffer is that every drop is explained, never silently absorbed into a generic 'other'."""

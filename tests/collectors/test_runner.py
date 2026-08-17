@@ -7,6 +7,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
@@ -55,6 +56,28 @@ def test_resolve_collector_class_uses_explicit_registry_and_generic_feed_fallbac
     assert resolve_collector_class(generic) is FeedXmlCollector
     unregistered_api = SourceConfig(name="mystery_api", kind="api", base_url="x", risk_prior=0.2)
     assert resolve_collector_class(unregistered_api) is None
+
+
+def test_explicit_collector_key_overrides_name_based_resolution() -> None:
+    """Pepper publishes several RSS channels; each needs its own source row but the same parser, which
+    name-based lookup alone cannot express."""
+    entry = SourceConfig(
+        name="pepper_elektronika",
+        kind="rss",
+        base_url="https://www.pepper.pl/rss/grupa/elektronika",
+        risk_prior=0.05,
+        collector="pepper_rss",
+    )
+    assert resolve_collector_class(entry) is PepperRssCollector
+
+
+def test_unknown_explicit_collector_key_fails_loudly() -> None:
+    """A typo in `collector:` must not silently fall through to the generic feed parser."""
+    entry = SourceConfig(
+        name="whatever", kind="rss", base_url="x", risk_prior=0.05, collector="peppr_rss"
+    )
+    with pytest.raises(ValueError, match="peppr_rss"):
+        resolve_collector_class(entry)
 
 
 def test_configured_user_agent_reaches_the_collector_and_its_http_client(tmp_path: Path) -> None:

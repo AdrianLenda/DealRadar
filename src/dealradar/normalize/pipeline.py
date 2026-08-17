@@ -21,11 +21,11 @@ from dealradar import db
 from dealradar.models import Offer, RawOffer, RunReport
 from dealradar.normalize import attrs as attrs_mod
 from dealradar.normalize import condition as condition_mod
-from dealradar.normalize import fx, identifiers, money, store
+from dealradar.normalize import fx, identifiers, money, store, voucher
 from dealradar.normalize import title as title_mod
 from dealradar.normalize.brands import BrandIndex, load_brand_index
 from dealradar.normalize.categories import CategoryMap, load_category_map
-from dealradar.normalize.hooks import HOOKS, Hook
+from dealradar.normalize.hooks import Hook, resolve_hook
 from dealradar.normalize.mapping import NormalizerConfig, NormalizerConfigRegistry, load_normalizer_registry
 from dealradar.normalize.report import NormalizeReport, RejectedOffer, RejectReason, SourceCoverage
 
@@ -151,6 +151,11 @@ class GenericNormalizer:
 
         description_raw = fields.get("description")
         description = str(description_raw).strip() if description_raw else None
+
+        # A voucher is not a product. Deal aggregators report its face value in the same price field a real
+        # offer uses, so this has to be caught before the price is trusted -- see normalize/voucher.py.
+        if voucher.looks_like_voucher(title, description):
+            return self._reject(raw, "not_a_product_offer", f"reads as a voucher/discount, not a priced product: {title[:80]!r}")
 
         currency = str(fields["currency"]).strip().upper() if fields.get("currency") else money.detect_currency(
             fields.get("price_gross"), default=self._config.currency_default
@@ -317,7 +322,7 @@ def normalize_batch(session: Session, since: datetime | None) -> NormalizeReport
         if name not in normalizer_cache:
             cfg = normalizer_registry.resolve(name, kind)
             normalizer_cache[name] = GenericNormalizer(
-                name, config=cfg, brand_index=brand_index, category_map=category_map, hook=HOOKS.get(name)
+                name, config=cfg, brand_index=brand_index, category_map=category_map, hook=resolve_hook(name)
             )
         return normalizer_cache[name]
 

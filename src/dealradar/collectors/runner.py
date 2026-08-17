@@ -47,9 +47,32 @@ _EXPLICIT_REGISTRY: dict[str, type[BaseCollector]] = {
     "amazon": AmazonPaApiCollector,
 }
 
+# Collector classes addressable by an explicit `collector:` key in sources.yaml, independent of source name.
+_COLLECTOR_BY_KEY: dict[str, type[BaseCollector]] = {
+    "pepper_rss": PepperRssCollector,
+    "ibood": IboodCollector,
+    "allegro_api": AllegroApiCollector,
+    "aliexpress": AliexpressCollector,
+    "amazon_pa_api": AmazonPaApiCollector,
+    "feed_xml": FeedXmlCollector,
+}
+
 
 def resolve_collector_class(entry: SourceConfig) -> type[BaseCollector] | None:
-    """Returns the collector class registered for entry's name, or FeedXmlCollector for any other feed-kind source."""
+    """Returns the collector class for entry: an explicit `collector:` key wins, then its name, then the
+    generic feed parser for any other feed-kind source."""
+    # An explicit `collector:` in sources.yaml lets one collector serve several sources whose names differ
+    # -- e.g. Pepper publishes separate RSS channels per section (gorące / wszystkie / grupa/elektronika),
+    # each of which has to be its own source row but all of which are the same parser.
+    declared = getattr(entry, "collector", None)
+    if declared:
+        chosen = _COLLECTOR_BY_KEY.get(str(declared).strip().lower())
+        if chosen is None:
+            raise ValueError(
+                f"source {entry.name!r} declares collector {declared!r}, which is not one of "
+                f"{sorted(_COLLECTOR_BY_KEY)}"
+            )
+        return chosen
     explicit = _EXPLICIT_REGISTRY.get(entry.name.strip().lower())
     if explicit is not None:
         return explicit

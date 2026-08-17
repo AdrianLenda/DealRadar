@@ -105,17 +105,36 @@ class NormalizerConfigRegistry:
         self._by_kind_default = by_kind_default
 
     def resolve(self, source_name: str, kind: str) -> NormalizerConfig:
-        """Returns the best-matching NormalizerConfig for `source_name`: exact match, else the kind's default.
+        """Returns the best-matching NormalizerConfig for `source_name`: exact match, else its `family_`
+        prefix, else the kind's default.
+
+        The family step exists because one site can publish several channels that are separate sources but
+        share a payload shape -- `pepper`, `pepper_wszystkie` and `pepper_elektronika` are all Pepper RSS,
+        so `pepper_elektronika` inherits `pepper.yaml` instead of needing a duplicate file (and, worse,
+        silently falling through to the generic RSS default, which does not know where Pepper hides its
+        price).
 
         Falls back to a minimal built-in config (best-effort, guesses the handful of most common field
-        names) when neither an exact nor a kind-default YAML exists, so a source A1 adds before A2 writes
-        its YAML still gets *something* rather than a crash (Z7: one missing config must not stop the run).
+        names) when nothing else matches, so a source A1 adds before A2 writes its YAML still gets
+        *something* rather than a crash (Z7: one missing config must not stop the run).
         """
         if source_name in self._by_source:
             return self._by_source[source_name]
+        family = source_family(source_name)
+        if family != source_name and family in self._by_source:
+            return self._by_source[family]
         if kind in self._by_kind_default:
             return self._by_kind_default[kind]
         return _BUILTIN_FALLBACK
+
+
+def source_family(source_name: str) -> str:
+    """Returns the part of a source name before its first underscore -- the site a channel belongs to.
+
+    `pepper_elektronika` -> `pepper`; `allegro` -> `allegro`. Shared by the normalizer-config and hook
+    lookups so both inherit per-site behaviour identically.
+    """
+    return source_name.split("_", 1)[0]
 
 
 _BUILTIN_FALLBACK = NormalizerConfig(

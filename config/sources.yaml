@@ -50,9 +50,34 @@ sources:
     base_url: "https://www.pepper.pl/rss/gor%C4%85ce"
     enabled: true
     risk_prior: 0.05
-    # VERIFIED LIVE 2026-08-17: returns 200 with a real RSS body. The old `/rss/hot` value worked only
-    # via a 301 to this canonical URL; pointing straight at it saves a redirect hop per fetch.
-    # `/rss/wszystkie` (all deals, higher volume, unfiltered) also exists if breadth ever beats curation.
+    # VERIFIED LIVE 2026-08-17: returns 200 with a real RSS body (30 items). The old `/rss/hot` value
+    # worked only via a 301 to this canonical URL; pointing straight at it saves a redirect hop per fetch.
+    # Pepper publishes several parallel channels, each capped at ~30 items -- the two below are separate
+    # source rows so each gets its own risk_prior, its own F5 baseline, and its own row in run_log.
+    # Deliberately NOT added: /rss/kupony. It is all vouchers ("10 zł zniżki na ..."), and the
+    # price-from-title heuristic reads that discount amount as the product's price -- see the note in
+    # config/normalizers/pepper.yaml. Adding it would poison medians with fake 10 zł products.
+
+  - name: pepper_wszystkie
+    kind: rss
+    collector: pepper_rss
+    base_url: "https://www.pepper.pl/rss/wszystkie"
+    enabled: true
+    risk_prior: 0.05
+    # VERIFIED LIVE 2026-08-17: 200, 30 items. Unfiltered firehose -- lower average quality than /gorące
+    # (no community vetting), but catches deals before they get hot.
+
+  - name: pepper_elektronika
+    kind: rss
+    collector: pepper_rss
+    base_url: "https://www.pepper.pl/rss/grupa/elektronika"
+    enabled: true
+    risk_prior: 0.05
+    # VERIFIED LIVE 2026-08-17: 200, 30 items. The highest-value Pepper channel for this project: it is
+    # the one section that lines up with the categories A5 actually has utility formulas for
+    # (config/categories/*.yaml), so its offers can reach a real 1-10 score rather than no_utility_formula.
+    # Sibling group feeds are hit-and-miss: /rss/grupa/komputery returns 200 but empty, /rss/grupa/rtv-i-agd
+    # is a 404 -- verify any new group URL live before adding it.
     # Collector implemented (collectors/pepper_rss.py) and covered by offline tests against a recorded
     # fixture. The base_url above is Pepper's real hot-deals RSS path but has not been fetched live from
     # this environment (no outbound network in the agent sandbox) -- verify the exact URL/shape once this

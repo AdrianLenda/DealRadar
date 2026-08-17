@@ -13,6 +13,8 @@ from __future__ import annotations
 import re
 from typing import Any, Protocol
 
+from dealradar.normalize.mapping import source_family
+
 
 class Hook(Protocol):
     """A source-specific post-processing step run after the declarative field mapping."""
@@ -57,29 +59,60 @@ class AllegroParametersHook:
 
 _TITLE_PRICE = re.compile(r"(\d[\d\s]{2,7}(?:[.,]\d{1,2})?)\s*(?:zł|PLN)", re.IGNORECASE)
 
+_DISCOUNT_CONTEXT = re.compile(
+    r"^\W*(zni[żz]k|rabat|tanie|mniej|off\b|kod|kupon|bon|cashback|zwrot)", re.IGNORECASE
+)
+"""Words that, right after an amount, mean it is money *taken off* rather than the price. Pepper carries a
+lot of "10 zł zniżki na zamówienie" voucher posts; reading that 10 zł as a product price invents a
+ten-złoty product and poisons the median for whatever it gets clustered with."""
 
-class PepperTitlePriceHook:
-    """Falls back to a price embedded in the RSS title/description when Pepper gives no dedicated price field.
 
-    Pepper listings are user-submitted deal posts; the structured price field is sometimes absent while the
-    title itself reads like "[Deal] LG UltraGear 27GP850 27\" 165Hz -30% @ 1799 zł" (A1 spec: "Rekord RSS
-    jest ubogi ... zapisz całość surowo -- A2 wyciągnie z tego, co się da").
+class PepperHook:
+    """Fills price and shop for Pepper's RSS, which hides both in an element's XML attributes.
+
+    A Pepper `<item>` carries `<pepper:merchant name="InPost" price="38,98zł"/>`, which the collector
+    flattens to `merchant_attrib = {"name": ..., "price": ...}`. That structured pair is far better than
+    guessing from prose: it is the actual deal price, and `name` is the shop -- the only cross-shop signal
+    this source gives us at all. Reading the title was the original approach and it rejected ~95% of real
+    items for having no parseable price.
+
+    The title regex survives only as a last resort, now refusing amounts that read as a discount.
     """
 
     def apply(self, payload: dict[str, Any], fields: dict[str, Any]) -> dict[str, Any]:
-        """Fills price_gross from a "<number> zł/PLN" pattern in the title when no price field was mapped."""
-        if "price_gross" in fields:
-            return fields
-        title = fields.get("title") or payload.get("title") or ""
-        match = _TITLE_PRICE.search(str(title))
-        if match:
-            fields["price_gross"] = match.group(1)
+        """Fills price_gross/seller from merchant_attrib, falling back to a non-discount amount in the title."""
+        merchant = payload.get("merchant_attrib")
+        if isinstance(merchant, dict):
+            price = merchant.get("price")
+            if "price_gross" not in fields and isinstance(price, str) and price.strip():
+                fields["price_gross"] = price
+            name = merchant.get("name")
+            if "seller" not in fields and isinstance(name, str) and name.strip():
+                fields["seller"] = name.strip()
+
+        if "price_gross" not in fields:
+            title = str(fields.get("title") or payload.get("title") or "")
+            match = _TITLE_PRICE.search(title)
+            if match and not _DISCOUNT_CONTEXT.match(title[match.end() :]):
+                fields["price_gross"] = match.group(1)
         return fields
 
 
 HOOKS: dict[str, Hook] = {
     "allegro": AllegroParametersHook(),
-    "pepper": PepperTitlePriceHook(),
+    "pepper": PepperHook(),
 }
 """Source name -> Hook, applied by the pipeline after the declarative mapping. A source with no entry here
 runs with the YAML mapping alone -- most sources (plain affiliate feeds) need no Python hook at all."""
+
+
+def resolve_hook(source_name: str) -> Hook | None:
+    """Returns the hook for `source_name`, letting per-channel variants inherit their site's hook; None if none.
+
+    Mirrors the family step in `mapping.NormalizerConfigRegistry.resolve`, so `pepper_elektronika` gets
+    Pepper's hook instead of silently running with none.
+    """
+    exact = HOOKS.get(source_name)
+    if exact is not None:
+        return exact
+    return HOOKS.get(source_family(source_name))
