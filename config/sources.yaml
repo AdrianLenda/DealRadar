@@ -39,9 +39,12 @@ sources:
 
   - name: pepper
     kind: rss
-    base_url: "https://www.pepper.pl/rss/hot"
+    base_url: "https://www.pepper.pl/rss/gor%C4%85ce"
     enabled: true
     risk_prior: 0.05
+    # VERIFIED LIVE 2026-08-17: returns 200 with a real RSS body. The old `/rss/hot` value worked only
+    # via a 301 to this canonical URL; pointing straight at it saves a redirect hop per fetch.
+    # `/rss/wszystkie` (all deals, higher volume, unfiltered) also exists if breadth ever beats curation.
     # Collector implemented (collectors/pepper_rss.py) and covered by offline tests against a recorded
     # fixture. The base_url above is Pepper's real hot-deals RSS path but has not been fetched live from
     # this environment (no outbound network in the agent sandbox) -- verify the exact URL/shape once this
@@ -50,8 +53,15 @@ sources:
   - name: ibood
     kind: feed
     base_url: "https://www.ibood.com/feed"
-    enabled: true
+    enabled: false
     risk_prior: 0.1
+    # DISABLED 2026-08-17 after live probing: this URL and two other guesses
+    # (/pl/pl/rss, /be/nl/rss) all return 403 "Access Denied" as an HTML block page -- a WAF/CDN block,
+    # not a redirect or a parsing problem. Either the URL is wrong (all three were guesses; iBood
+    # publishes no documented public feed we could find) or iBood blocks non-browser clients outright.
+    # Deliberately NOT worked around: faking a browser User-Agent to get past a bot block is exactly the
+    # anti-bot circumvention ARCHITEKTURA.md section 6 rules out. Re-enable only with a real, documented
+    # feed URL. The collector itself is implemented and unit-tested against recorded fixtures.
     # Collector implemented (collectors/ibood.py), expects JSON: either {"deals": [...]} or a bare list.
     # Same caveat as pepper above: base_url is a plausible placeholder, not verified against the live feed
     # from this sandbox. If iBood's real feed is XML instead of JSON, point this at a feed_xml-style entry

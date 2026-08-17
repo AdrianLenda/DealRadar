@@ -128,7 +128,14 @@ class BaseCollector(ABC):
     def client(self) -> httpx.Client:
         """Returns a lazily-created httpx.Client configured with this collector's timeout and User-Agent."""
         if self._client is None:
-            self._client = httpx.Client(timeout=self.timeout_s, headers={"User-Agent": self.user_agent})
+            # follow_redirects=True: feed URLs move and answer 301 to their canonical form (Pepper's
+            # /rss/hot -> /rss/gorące is exactly this). Without it raise_for_status() treats a perfectly
+            # healthy permanent redirect as a dead source. Signed POSTs opt out explicitly -- see post().
+            self._client = httpx.Client(
+                timeout=self.timeout_s,
+                headers={"User-Agent": self.user_agent},
+                follow_redirects=True,
+            )
         return self._client
 
     def close(self) -> None:
@@ -225,7 +232,9 @@ class BaseCollector(ABC):
         last_exc: Exception | None = None
         for attempt in range(self.max_retries):
             try:
-                response = self.client.post(url, content=content, headers=headers)
+                # No redirect following here: an AWS SigV4 signature covers the exact host+path it was
+                # computed for, so a silently-followed redirect would just fail validation elsewhere.
+                response = self.client.post(url, content=content, headers=headers, follow_redirects=False)
             except httpx.TransportError as exc:
                 last_exc = exc
                 wait = float(2**attempt)
